@@ -1,9 +1,9 @@
 name: Playwright Regression Tests
 
 on:
-  push:                    # รันเมื่อ Push Code
+  push:
     branches: [ main ]
-  pull_request:            # รันเมื่อทำ Pull Request
+  pull_request:
     branches: [ main ]
 
 jobs:
@@ -11,32 +11,24 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    # 1. ดึง Code มา
     - uses: actions/checkout@v3
     
-    # 2. ติดตั้ง Node.js
     - uses: actions/setup-node@v3
       with:
         node-version: 18
     
-    # 3. ติดตั้ง Dependencies
     - name: Install dependencies
       run: npm install
     
-    # 4. ติดตั้ง Playwright Browser
     - name: Install Playwright
       run: npx playwright install
     
-    # 5. รัน Test
     - name: Run Playwright Tests
       run: npx playwright test
     
-    # 6. เก็บ Report (ถึงแม้ Test Fail)
     - name: Upload Report
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4 
       with:
         name: playwright-report
         path: playwright-report/
-
-
