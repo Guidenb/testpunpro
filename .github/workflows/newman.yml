@@ -1,0 +1,36 @@
+name: Newman API Tests
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  api-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    
+    # ติดตั้ง Newman
+    - name: Install Newman
+      run: npm install -g newman
+    
+    # รัน Postman Collection
+    - name: Run API Tests
+      run: |
+        newman run collection.json \
+        --environment environment.json \
+        --reporters cli,json \
+        --reporter-json-export results.json
+    
+    # เก็บผลลัพธ์
+    - name: Upload Results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: newman-results
+        path: results.json
